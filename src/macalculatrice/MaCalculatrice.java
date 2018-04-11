@@ -45,9 +45,12 @@ public class MaCalculatrice {
             //Traitement spécifique pour les paranthèses, afin de les supprimer avec leur contenu après le calcul
             if(StringUtils.equals(prio, "("))
             {
-                List<String> sousListe = list.subList(indexPrio+1, indexPrio+4);
+                //On récupère l'endroit où se ferme la parathèse
+                int indexFinPrio = list.indexOf(")");
+                //Extraction d'une sous liste contenant les nombres et l'opérande entre parathèses
+                List<String> sousListe = list.subList(indexPrio+1, indexFinPrio+1);
                 int res = calcul(sousListe);
-                list.subList(indexPrio, indexPrio+5).clear();
+                list.subList(indexPrio, indexFinPrio+1).clear();
                 list.add(indexPrio, Integer.toString(res));
             }
             //Sinon on supprime ce qu'il y a avant et après l'opérande prioritaire
