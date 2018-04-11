@@ -28,6 +28,13 @@ public class Calculatrice {
     
     public int division(int a, int b)
     {
-        return a/b;
+        try
+        {
+            return a/b;
+        }
+        catch(ArithmeticException e)
+        {
+            return 0;
+        }
     }
 }
