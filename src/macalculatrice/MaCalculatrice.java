@@ -39,6 +39,9 @@ public class MaCalculatrice {
     public static void calcul_prio(List<String> list, String prio)
     {
         int indexPrio = list.indexOf(prio);
+        int indexFinPrio = 0;
+        
+        List<String> sousListe = new ArrayList<String>();
         
         if(indexPrio != -1)
         {
@@ -46,21 +49,30 @@ public class MaCalculatrice {
             if(StringUtils.equals(prio, "("))
             {
                 //On récupère l'endroit où se ferme la parathèse
-                int indexFinPrio = list.indexOf(")");
+                indexFinPrio = list.indexOf(")");
+                
                 //Extraction d'une sous liste contenant les nombres et l'opérande entre parathèses
-                List<String> sousListe = list.subList(indexPrio+1, indexFinPrio+1);
-                int res = calcul(sousListe);
-                list.subList(indexPrio, indexFinPrio+1).clear();
-                list.add(indexPrio, Integer.toString(res));
+                sousListe = list.subList(indexPrio+1, indexFinPrio+1);
+                
+                //Recherche des priorités dans la paranthèse
+                for (EnumPrio ep : EnumPrio.values())
+                {
+                    calcul_prio(sousListe, ep.toString());
+                }
+                
+                //On actualise l'endroit ou se ferme la parathese
+                indexFinPrio = list.indexOf(")");
             }
             //Sinon on supprime ce qu'il y a avant et après l'opérande prioritaire
             else
             {
-                List<String> sousListe = list.subList(indexPrio-1, indexPrio+2);
-                int res = calcul(sousListe);
-                list.subList(indexPrio-1, indexPrio+2).clear();
-                list.add(indexPrio-1, Integer.toString(res));
+                indexFinPrio = indexPrio+1;
+                sousListe = list.subList(indexPrio-1, indexFinPrio+1);
             }
+            
+            int res = calcul(sousListe);
+            list.subList(indexPrio, indexFinPrio+1).clear();
+            list.add(indexPrio, Integer.toString(res));
         }
     }
     
@@ -93,5 +105,13 @@ public class MaCalculatrice {
         }
         
         return res;
+    }
+    
+    public static void afficherliste(List<String> l)
+    {
+        for(int i = 0; i < l.size(); i++)
+        {
+            System.out.println(l.get(i));
+        }
     }
 }
